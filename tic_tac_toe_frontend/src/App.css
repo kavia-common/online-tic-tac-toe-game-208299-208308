@@ -1,104 +1,260 @@
-/* CSS Variables for Theme Management */
+/* Retro Tic Tac Toe theme (plain CSS only) */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
-}
+  --bg: #0b1020;
+  --bg2: #0f1630;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.14);
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  --text: #e9edf7;
+  --muted: rgba(233, 237, 247, 0.72);
+
+  --primary: #3b82f6;
+  --success: #06b6d4;
+  --danger: #ef4444;
+
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  --glow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  --radius: 18px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
 .App {
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(59, 130, 246, 0.28), transparent 55%),
+    radial-gradient(850px 520px at 80% 85%, rgba(6, 182, 212, 0.24), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+}
+
+/* Centered layout shell */
+.ttt-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+}
+
+/* Header */
+.ttt-header {
+  width: min(520px, 100%);
   text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-bottom: 18px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ttt-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  margin-bottom: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ttt-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-size: clamp(30px, 3.4vw, 44px);
+  text-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
 }
 
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
-}
-
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+.ttt-subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-family: var(--sans);
   font-size: 14px;
-  font-weight: 600;
+}
+
+/* Card */
+.ttt-card {
+  width: min(520px, 100%);
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.05)
+  );
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ttt-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background:
+    linear-gradient(90deg, rgba(59, 130, 246, 0.18), transparent 38%),
+    linear-gradient(270deg, rgba(6, 182, 212, 0.18), transparent 38%);
+  opacity: 0.6;
+  pointer-events: none;
+  mask-image: radial-gradient(60% 45% at 50% 0%, black 25%, transparent 70%);
+}
+
+/* Status */
+.ttt-status {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 14px;
+  padding: 12px 12px;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Board */
+.ttt-board {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.ttt-square {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 26px rgba(0, 0, 0, 0.32);
+  height: clamp(88px, 15vw, 130px);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 120ms ease, background-color 120ms ease,
+    border-color 120ms ease, box-shadow 120ms ease;
+  display: grid;
+  place-items: center;
+  user-select: none;
 }
 
-.theme-toggle:hover {
+.ttt-square:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.theme-toggle:active {
+.ttt-square:active {
   transform: translateY(0);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ttt-square:disabled {
+  cursor: not-allowed;
+  opacity: 0.88;
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+.ttt-square:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 26px rgba(0, 0, 0, 0.32),
+    var(--glow);
+}
+
+/* Marks */
+.ttt-mark {
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: clamp(44px, 8vw, 64px);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-shadow: 0 10px 26px rgba(0, 0, 0, 0.6);
+}
+
+.ttt-square--filled .ttt-mark {
+  color: var(--text);
+}
+
+.ttt-square--win {
+  border-color: rgba(6, 182, 212, 0.55);
+  background: rgba(6, 182, 212, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 10px 26px rgba(0, 0, 0, 0.32),
+    0 0 0 3px rgba(6, 182, 212, 0.20);
+}
+
+/* Actions */
+.ttt-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.ttt-btn {
+  border: 1px solid rgba(59, 130, 246, 0.55);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.30), rgba(59, 130, 246, 0.18));
+  color: var(--text);
+  font-family: var(--mono);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, box-shadow 120ms ease;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+
+.ttt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.35),
+    0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+.ttt-btn:active {
+  transform: translateY(0);
+}
+
+.ttt-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.35),
+    var(--glow);
+}
+
+/* Footer hint */
+.ttt-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  text-align: center;
+}
+
+.ttt-hint {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Mobile spacing tweaks */
+@media (max-width: 420px) {
+  .ttt-card {
+    padding: 14px;
+  }
+  .ttt-board {
+    gap: 8px;
   }
 }
